@@ -19,7 +19,7 @@ frame.Draggable = true
 
 local title = Instance.new("TextLabel", frame)
 title.Size = UDim2.new(1, 0, 0, 30)
-title.Text = "🔑 Nhập Key"
+title.Text = "🔑Nhập MK"
 title.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 title.TextColor3 = Color3.new(1, 1, 1)
 title.Font = Enum.Font.SourceSansBold
@@ -38,7 +38,7 @@ box.TextScaled = true
 local submit = Instance.new("TextButton", frame)
 submit.Size = UDim2.new(0.9, 0, 0, 30)
 submit.Position = UDim2.new(0.05, 0, 0, 75)
-submit.Text = "Xác nhận"
+submit.Text = "Very Key🪪"
 submit.BackgroundColor3 = Color3.fromRGB(0, 170, 127)
 submit.TextColor3 = Color3.new(1, 1, 1)
 submit.Font = Enum.Font.SourceSansBold
