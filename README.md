@@ -52,7 +52,6 @@ submit.MouseButton1Click:Connect(function()
 		gui.Name = "NBGui"
 		gui.ResetOnSpawn = false
 
-		-- Nút đóng mở (di chuyển được)
 		local toggleFrame = Instance.new("Frame", gui)
 		toggleFrame.Size = UDim2.new(0, 60, 0, 60)
 		toggleFrame.Position = UDim2.new(0, 10, 0.5, -30)
@@ -65,7 +64,6 @@ submit.MouseButton1Click:Connect(function()
 		toggleBtn.Image = "rbxassetid://87017226532045"
 		toggleBtn.BackgroundTransparency = 1
 
-		-- GUI chính nhỏ
 		local main = Instance.new("Frame", gui)
 		main.Size = UDim2.new(0, 210, 0, 175)
 		main.Position = UDim2.new(0, 80, 0.5, -87)
@@ -78,7 +76,6 @@ submit.MouseButton1Click:Connect(function()
 			main.Visible = not main.Visible
 		end)
 
-		-- Tiêu đề GUI (Rainbow)
 		local rainbowTitle = Instance.new("TextLabel", main)
 		rainbowTitle.Size = UDim2.new(1, 0, 0, 25)
 		rainbowTitle.Text = "DreamHub | By Sung a Lo"
@@ -94,7 +91,6 @@ submit.MouseButton1Click:Connect(function()
 			rainbowTitle.TextColor3 = color
 		end)
 
-		-- Hàm tạo Toggle
 		function createToggle(name, posY, onToggle)
 			local btn = Instance.new("TextButton", main)
 			btn.Size = UDim2.new(0.9, 0, 0, 30)
@@ -137,22 +133,57 @@ submit.MouseButton1Click:Connect(function()
 			end
 		end)
 
-		-- Boost
-		local boostConn
+		-- Boost: Bấm là chạy script Boost riêng biệt (tạo nút mới)
 		createToggle("Boost", 65, function(on)
 			if on then
-				boostConn = RunService.RenderStepped:Connect(function()
-					local char = lp.Character
-					if char and char:FindFirstChild("HumanoidRootPart") then
-						local hum = char:FindFirstChild("Humanoid")
-						local hrp = char:FindFirstChild("HumanoidRootPart")
-						if hum.MoveDirection.Magnitude > 0 then
-							hrp.Velocity = hum.MoveDirection * 50 + Vector3.new(0, hrp.Velocity.Y, 0)
-						end
+				-- Ngăn GUI trùng
+				pcall(function() game.CoreGui:FindFirstChild("SpeedGui"):Destroy() end)
+
+				local char = lp.Character or lp.CharacterAdded:Wait()
+				local hum = char:WaitForChild("Humanoid")
+
+				local gui = Instance.new("ScreenGui", game.CoreGui)
+				gui.Name = "SpeedGui"
+				gui.ResetOnSpawn = false
+
+				local btn = Instance.new("TextButton")
+				btn.Parent = gui
+				btn.Size = UDim2.new(0, 100, 0, 35)
+				btn.Position = UDim2.new(0.5, -50, 0.7, -60)
+				btn.Text = "Boost OFF"
+				btn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+				btn.TextColor3 = Color3.new(1, 1, 1)
+				btn.TextScaled = true
+				btn.Font = Enum.Font.GothamBold
+				btn.BorderSizePixel = 0
+				btn.ZIndex = 9999
+				btn.BackgroundTransparency = 0.05
+				btn.Active = true
+				btn.Draggable = true
+
+				local speedEnabled = false
+
+				RunService.Stepped:Connect(function()
+					if speedEnabled and hum then
+						pcall(function()
+							hum.WalkSpeed = 55
+						end)
 					end
 				end)
-			elseif boostConn then
-				boostConn:Disconnect()
+
+				btn.MouseButton1Click:Connect(function()
+					speedEnabled = not speedEnabled
+					if speedEnabled then
+						btn.Text = "Boost ON"
+						btn.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
+					else
+						btn.Text = "Boost OFF"
+						btn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+						pcall(function()
+							hum.WalkSpeed = 16
+						end)
+					end
+				end)
 			end
 		end)
 
