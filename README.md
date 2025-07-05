@@ -22,7 +22,7 @@ frame.Draggable = true
 
 local title = Instance.new("TextLabel", frame)
 title.Size = UDim2.new(1, 0, 0, 30)
-title.Text = "🔑 Nhập Key"
+title.Text = "🔑KeyLess"
 title.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 title.TextColor3 = Color3.new(1, 1, 1)
 title.Font = Enum.Font.Arcade
@@ -41,7 +41,7 @@ box.TextScaled = true
 local submit = Instance.new("TextButton", frame)
 submit.Size = UDim2.new(0.9, 0, 0, 30)
 submit.Position = UDim2.new(0.05, 0, 0, 75)
-submit.Text = "Xác nhận"
+submit.Text = "Very Key Premium"
 submit.BackgroundColor3 = Color3.fromRGB(0, 170, 127)
 submit.TextColor3 = Color3.new(1, 1, 1)
 submit.Font = Enum.Font.Arcade
@@ -64,7 +64,7 @@ submit.MouseButton1Click:Connect(function()
 
 		local toggleBtn = Instance.new("ImageButton", toggleFrame)
 		toggleBtn.Size = UDim2.new(1, 0, 1, 0)
-		toggleBtn.Image = "rbxassetid://15679098532"
+		toggleBtn.Image = "rbxassetid://4468425975"
 		toggleBtn.BackgroundTransparency = 1
 
 		local main = Instance.new("Frame", gui)
