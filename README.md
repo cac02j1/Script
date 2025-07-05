@@ -1,4 +1,4 @@
--- Ngăn GUI trùng lặp
+-- Ngăn GUI cũ
 pcall(function() game.CoreGui:FindFirstChild("NBGui"):Destroy() end)
 
 local Players = game:GetService("Players")
@@ -6,7 +6,7 @@ local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
 local lp = Players.LocalPlayer
 
--- GUI Nhập Key
+-- GUI nhập key
 local keyGui = Instance.new("ScreenGui", game.CoreGui)
 keyGui.Name = "NBGui"
 
@@ -65,8 +65,8 @@ submit.MouseButton1Click:Connect(function()
 		toggleBtn.BackgroundTransparency = 1
 
 		local main = Instance.new("Frame", gui)
-		main.Size = UDim2.new(0, 210, 0, 175)
-		main.Position = UDim2.new(0, 80, 0.5, -87)
+		main.Size = UDim2.new(0, 220, 0, 210)
+		main.Position = UDim2.new(0, 80, 0.5, -105)
 		main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 		main.Active = true
 		main.Draggable = true
@@ -77,19 +77,19 @@ submit.MouseButton1Click:Connect(function()
 		end)
 
 		local rainbowTitle = Instance.new("TextLabel", main)
-		rainbowTitle.Size = UDim2.new(1, 0, 0, 25)
+		rainbowTitle.Size = UDim2.new(1, 0, 0, 30)
 		rainbowTitle.Text = "DreamHub | By Sung a Lo"
 		rainbowTitle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-		rainbowTitle.TextColor3 = Color3.new(1, 1, 1)
 		rainbowTitle.Font = Enum.Font.SourceSansBold
 		rainbowTitle.TextScaled = true
 
 		local hue = 0
 		RunService.RenderStepped:Connect(function()
 			hue = (hue + 1) % 360
-			local color = Color3.fromHSV(hue / 360, 1, 1)
-			rainbowTitle.TextColor3 = color
+			rainbowTitle.TextColor3 = Color3.fromHSV(hue / 360, 1, 1)
 		end)
+
+		local boostEnabled = false
 
 		function createToggle(name, posY, onToggle)
 			local btn = Instance.new("TextButton", main)
@@ -117,37 +117,30 @@ submit.MouseButton1Click:Connect(function()
 
 		-- Noclip
 		local noclipConn
-		createToggle("Noclip", 30, function(on)
+		createToggle("Noclip", 40, function(on)
 			if on then
 				noclipConn = RunService.Stepped:Connect(function()
 					if lp.Character then
-						for _, part in pairs(lp.Character:GetDescendants()) do
-							if part:IsA("BasePart") then
-								part.CanCollide = false
+						for _, p in pairs(lp.Character:GetDescendants()) do
+							if p:IsA("BasePart") then
+								p.CanCollide = false
 							end
 						end
 					end
 				end)
-			elseif noclipConn then
-				noclipConn:Disconnect()
-			end
+			elseif noclipConn then noclipConn:Disconnect() end
 		end)
 
-		-- Boost: Bấm là chạy script Boost riêng biệt (tạo nút mới)
-		createToggle("Boost", 65, function(on)
+		-- Boost
+		createToggle("Boost", 80, function(on)
 			if on then
-				-- Ngăn GUI trùng
+				boostEnabled = true
 				pcall(function() game.CoreGui:FindFirstChild("SpeedGui"):Destroy() end)
 
-				local char = lp.Character or lp.CharacterAdded:Wait()
-				local hum = char:WaitForChild("Humanoid")
+				local gui2 = Instance.new("ScreenGui", game.CoreGui)
+				gui2.Name = "SpeedGui"
 
-				local gui = Instance.new("ScreenGui", game.CoreGui)
-				gui.Name = "SpeedGui"
-				gui.ResetOnSpawn = false
-
-				local btn = Instance.new("TextButton")
-				btn.Parent = gui
+				local btn = Instance.new("TextButton", gui2)
 				btn.Size = UDim2.new(0, 100, 0, 35)
 				btn.Position = UDim2.new(0.5, -50, 0.7, -60)
 				btn.Text = "Boost OFF"
@@ -155,65 +148,77 @@ submit.MouseButton1Click:Connect(function()
 				btn.TextColor3 = Color3.new(1, 1, 1)
 				btn.TextScaled = true
 				btn.Font = Enum.Font.GothamBold
-				btn.BorderSizePixel = 0
-				btn.ZIndex = 9999
-				btn.BackgroundTransparency = 0.05
 				btn.Active = true
 				btn.Draggable = true
 
 				local speedEnabled = false
+				local hum
+
+				local function updateHum()
+					local char = lp.Character or lp.CharacterAdded:Wait()
+					hum = char:WaitForChild("Humanoid")
+				end
+
+				updateHum()
+				lp.CharacterAdded:Connect(function()
+					wait(0.5)
+					updateHum()
+				end)
 
 				RunService.Stepped:Connect(function()
 					if speedEnabled and hum then
-						pcall(function()
-							hum.WalkSpeed = 55
-						end)
+						hum.WalkSpeed = 55
 					end
 				end)
 
 				btn.MouseButton1Click:Connect(function()
 					speedEnabled = not speedEnabled
+					boostEnabled = speedEnabled
 					if speedEnabled then
 						btn.Text = "Boost ON"
 						btn.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
 					else
 						btn.Text = "Boost OFF"
 						btn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
-						pcall(function()
-							hum.WalkSpeed = 16
-						end)
+						if hum then hum.WalkSpeed = 16 end
 					end
 				end)
+			else
+				boostEnabled = false
 			end
 		end)
 
-		-- Infinite Jump
+		-- Infinite Jump Boosted
 		local infConn
-		createToggle("Infinite Jump", 100, function(on)
+		createToggle("Infinite Jump", 120, function(on)
 			if on then
 				infConn = UIS.JumpRequest:Connect(function()
 					local char = lp.Character
-					if char and char:FindFirstChild("HumanoidRootPart") then
-						char.HumanoidRootPart.Velocity = Vector3.new(0, 50, 0)
+					if char and char:FindFirstChild("HumanoidRootPart") and char:FindFirstChild("Humanoid") then
+						local hrp = char.HumanoidRootPart
+						local hum = char.Humanoid
+						local moveDir = hum.MoveDirection
+
+						local powerY = boostEnabled and 90 or 50
+						local speedXZ = boostEnabled and 65 or 0
+
+						hrp.Velocity = Vector3.new(moveDir.X * speedXZ, powerY, moveDir.Z * speedXZ)
 					end
 				end)
-			elseif infConn then
-				infConn:Disconnect()
-			end
+			elseif infConn then infConn:Disconnect() end
 		end)
 
-		-- ESP Rainbow Name
+		-- ESP Rainbow
 		local espLabels = {}
 		local espLoop
-
-		createToggle("ESP Rainbow", 135, function(on)
+		createToggle("ESP Rainbow", 160, function(on)
 			if on then
 				espLoop = RunService.RenderStepped:Connect(function()
 					for _, plr in pairs(Players:GetPlayers()) do
 						if plr ~= lp and plr.Character and plr.Character:FindFirstChild("Head") then
 							if not espLabels[plr] then
 								local bill = Instance.new("BillboardGui", plr.Character.Head)
-								bill.Size = UDim2.new(0, 100, 0, 25)
+								bill.Size = UDim2.new(0, 120, 0, 25)
 								bill.StudsOffset = Vector3.new(0, 2.5, 0)
 								bill.AlwaysOnTop = true
 
@@ -223,16 +228,12 @@ submit.MouseButton1Click:Connect(function()
 								nameLabel.Text = plr.Name
 								nameLabel.Font = Enum.Font.SourceSansBold
 								nameLabel.TextScaled = true
-								nameLabel.TextColor3 = Color3.new(1,1,1)
-
 								espLabels[plr] = nameLabel
 							end
 						end
 					end
-
 					for _, label in pairs(espLabels) do
-						local t = tick() % 5
-						label.TextColor3 = Color3.fromHSV(t/5, 1, 1)
+						label.TextColor3 = Color3.fromHSV((tick() % 5) / 5, 1, 1)
 					end
 				end)
 			else
@@ -243,6 +244,7 @@ submit.MouseButton1Click:Connect(function()
 				espLabels = {}
 			end
 		end)
+
 	else
 		lp:Kick("❌ Sai key rồi!")
 	end
