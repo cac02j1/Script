@@ -64,7 +64,7 @@ submit.MouseButton1Click:Connect(function()
 
 		local toggleBtn = Instance.new("ImageButton", toggleFrame)
 		toggleBtn.Size = UDim2.new(1, 0, 1, 0)
-		toggleBtn.Image = "rbxassetid://16207686441"
+		toggleBtn.Image = "rbxassetid://15042475988"
 		toggleBtn.BackgroundTransparency = 1
 
 		local main = Instance.new("Frame", gui)
