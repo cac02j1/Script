@@ -31,7 +31,7 @@ title.TextScaled = true
 local box = Instance.new("TextBox", frame)
 box.Size = UDim2.new(0.9, 0, 0, 30)
 box.Position = UDim2.new(0.05, 0, 0, 35)
-box.PlaceholderText = "Nhập key..."
+box.PlaceholderText = "Đĩ Mẹ M Nhập😡"
 box.Text = ""
 box.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 box.TextColor3 = Color3.new(0, 0, 0)
@@ -64,7 +64,7 @@ submit.MouseButton1Click:Connect(function()
 
 		local toggleBtn = Instance.new("ImageButton", toggleFrame)
 		toggleBtn.Size = UDim2.new(1, 0, 1, 0)
-		toggleBtn.Image = "rbxassetid://4468425975"
+		toggleBtn.Image = "rbxassetid://16207686441"
 		toggleBtn.BackgroundTransparency = 1
 
 		local main = Instance.new("Frame", gui)
