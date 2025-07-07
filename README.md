@@ -31,7 +31,7 @@ title.TextScaled = true
 local box = Instance.new("TextBox", frame)
 box.Size = UDim2.new(0.9, 0, 0, 30)
 box.Position = UDim2.new(0.05, 0, 0, 35)
-box.PlaceholderText = "Đĩ Mẹ M Nhập😡"
+box.PlaceholderText = "Script Steal A BrainrotZzZ"
 box.Text = ""
 box.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 box.TextColor3 = Color3.new(0, 0, 0)
@@ -41,7 +41,7 @@ box.TextScaled = true
 local submit = Instance.new("TextButton", frame)
 submit.Size = UDim2.new(0.9, 0, 0, 30)
 submit.Position = UDim2.new(0.05, 0, 0, 75)
-submit.Text = "Very Key Premium"
+submit.Text = "Very Key Premium🎫"
 submit.BackgroundColor3 = Color3.fromRGB(0, 170, 127)
 submit.TextColor3 = Color3.new(1, 1, 1)
 submit.Font = Enum.Font.Arcade
@@ -64,7 +64,7 @@ submit.MouseButton1Click:Connect(function()
 
 		local toggleBtn = Instance.new("ImageButton", toggleFrame)
 		toggleBtn.Size = UDim2.new(1, 0, 1, 0)
-		toggleBtn.Image = "rbxassetid://15042475988"
+		toggleBtn.Image = "rbxassetid://10042717079"
 		toggleBtn.BackgroundTransparency = 1
 
 		local main = Instance.new("Frame", gui)
@@ -81,7 +81,7 @@ submit.MouseButton1Click:Connect(function()
 
 		local rainbowTitle = Instance.new("TextLabel", main)
 		rainbowTitle.Size = UDim2.new(1, 0, 0, 25)
-		rainbowTitle.Text = "DreamHub | By Sung a Lo"
+		rainbowTitle.Text = "MeMayBeoHub | By Sung a Lo"
 		rainbowTitle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 		rainbowTitle.TextColor3 = Color3.new(1, 1, 1)
 		rainbowTitle.Font = Enum.Font.Arcade
