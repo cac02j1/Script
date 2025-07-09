@@ -26,7 +26,7 @@ toggleFrame.Draggable = true
 
 local toggleBtn = Instance.new("ImageButton", toggleFrame)
 toggleBtn.Size = UDim2.new(1, 0, 1, 0)
-toggleBtn.Image = "rbxassetid://87017226532045"
+toggleBtn.Image = "rbxassetid://10002032288"
 toggleBtn.BackgroundTransparency = 1
 
 -- GUI chính
