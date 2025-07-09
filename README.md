@@ -1,75 +1,173 @@
--- Xoá GUI & Blur nếu có pcall(function() game.CoreGui:FindFirstChild("MeMaybeoKeyUI"):Destroy() end) pcall(function() game.Lighting:FindFirstChild("MeMaybeoBlur"):Destroy() end)
+-- Ngăn GUI trùng lặp
+pcall(function() game.CoreGui:FindFirstChild("NBGui"):Destroy() end)
 
-local cg = game:GetService("CoreGui") local Lighting = game:GetService("Lighting")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
+local lp = Players.LocalPlayer
 
--- Blur nền local blur = Instance.new("BlurEffect", Lighting) blur.Name = "MeMaybeoBlur" blur.Size = 10
+-- GUI chính
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "NBGui"
+gui.ResetOnSpawn = false
 
--- GUI local gui = Instance.new("ScreenGui", cg) gui.Name = "MeMaybeoKeyUI" gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling gui.ResetOnSpawn = false
+-- Nút đóng mở (di chuyển được)
+local toggleFrame = Instance.new("Frame", gui)
+toggleFrame.Size = UDim2.new(0, 60, 0, 60)
+toggleFrame.Position = UDim2.new(0, 10, 0.5, -30)
+toggleFrame.BackgroundTransparency = 1
+toggleFrame.Active = true
+toggleFrame.Draggable = true
 
--- Khung chính local main = Instance.new("Frame", gui) main.Size = UDim2.new(0, 460, 0, 260) main.Position = UDim2.new(0.5, -230, 0.5, -130) main.BackgroundColor3 = Color3.fromRGB(20, 20, 30) main.BackgroundTransparency = 0.1 main.BorderSizePixel = 0 Instance.new("UICorner", main).CornerRadius = UDim.new(0, 8)
+local toggleBtn = Instance.new("ImageButton", toggleFrame)
+toggleBtn.Size = UDim2.new(1, 0, 1, 0)
+toggleBtn.Image = "rbxassetid://87017226532045"
+toggleBtn.BackgroundTransparency = 1
 
--- Logo local logo = Instance.new("ImageLabel", main) logo.Image = "rbxassetid://9387351497" logo.Size = UDim2.new(0, 32, 0, 32) logo.Position = UDim2.new(0, 20, 0, 10) logo.BackgroundTransparency = 1 logo.ImageColor3 = Color3.new(1, 1, 1)
+-- GUI chính nhỏ
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0, 210, 0, 175)
+main.Position = UDim2.new(0, 80, 0.5, -87)
+main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+main.Active = true
+main.Draggable = true
+main.Visible = false
 
--- Tiêu đề local title = Instance.new("TextLabel", main) title.Text = "MeMaybeo Hub Key System" title.Size = UDim2.new(1, -120, 0, 32) title.Position = UDim2.new(0, 60, 0, 10) title.BackgroundTransparency = 1 title.TextColor3 = Color3.fromRGB(220, 220, 255) title.Font = Enum.Font.GothamBold title.TextSize = 20 title.TextXAlignment = Enum.TextXAlignment.Left
-
--- Thanh thu nhỏ local minimizedBar = Instance.new("Frame", gui) minimizedBar.Size = UDim2.new(0, 180, 0, 35) minimizedBar.Position = UDim2.new(1, -190, 0, 10) minimizedBar.BackgroundColor3 = Color3.fromRGB(25, 25, 40) minimizedBar.BackgroundTransparency = 0.2 minimizedBar.Visible = false Instance.new("UICorner", minimizedBar).CornerRadius = UDim.new(0, 6)
-
-local miniLabel = Instance.new("TextLabel", minimizedBar) miniLabel.Text = "MeMaybeoHub" miniLabel.Size = UDim2.new(1, -60, 1, 0) miniLabel.Position = UDim2.new(0, 10, 0, 0) miniLabel.TextColor3 = Color3.fromRGB(220, 220, 255) miniLabel.Font = Enum.Font.GothamBold miniLabel.TextSize = 16 miniLabel.BackgroundTransparency = 1 miniLabel.TextXAlignment = Enum.TextXAlignment.Left
-
-local miniRestore = Instance.new("TextButton", minimizedBar) miniRestore.Text = "◻️" miniRestore.Size = UDim2.new(0, 25, 0, 25) miniRestore.Position = UDim2.new(1, -55, 0.5, -12) miniRestore.BackgroundColor3 = Color3.fromRGB(70, 70, 100) miniRestore.TextColor3 = Color3.new(1,1,1) miniRestore.Font = Enum.Font.GothamBold miniRestore.TextSize = 18 Instance.new("UICorner", miniRestore).CornerRadius = UDim.new(0, 5)
-
-local miniClose = Instance.new("TextButton", minimizedBar) miniClose.Text = "❌" miniClose.Size = UDim2.new(0, 25, 0, 25) miniClose.Position = UDim2.new(1, -28, 0.5, -12) miniClose.BackgroundColor3 = Color3.fromRGB(120, 40, 40) miniClose.TextColor3 = Color3.new(1,1,1) miniClose.Font = Enum.Font.GothamBold miniClose.TextSize = 16 Instance.new("UICorner", miniClose).CornerRadius = UDim.new(0, 5)
-
--- Nút thu nhỏ local btnMin = Instance.new("TextButton", main) btnMin.Text = "➖" btnMin.Size = UDim2.new(0, 25, 0, 25) btnMin.Position = UDim2.new(1, -90, 0, 5) btnMin.BackgroundColor3 = Color3.fromRGB(40, 40, 60) btnMin.TextColor3 = Color3.new(1,1,1) btnMin.Font = Enum.Font.GothamBold btnMin.TextSize = 16 Instance.new("UICorner", btnMin).CornerRadius = UDim.new(0, 4) btnMin.MouseButton1Click:Connect(function() main.Visible = false minimizedBar.Visible = true end)
-
-miniRestore.MouseButton1Click:Connect(function() main.Visible = true minimizedBar.Visible = false end)
-
--- Nút đóng local btnX = Instance.new("TextButton", main) btnX.Text = "❌" btnX.Size = UDim2.new(0, 25, 0, 25) btnX.Position = UDim2.new(1, -30, 0, 5) btnX.BackgroundColor3 = Color3.fromRGB(100, 40, 40) btnX.TextColor3 = Color3.new(1,1,1) btnX.Font = Enum.Font.GothamBold btnX.TextSize = 16 Instance.new("UICorner", btnX).CornerRadius = UDim.new(0, 4) btnX.MouseButton1Click:Connect(function() gui:Destroy() blur:Destroy() end) miniClose.MouseButton1Click:Connect(function() gui:Destroy() blur:Destroy() end)
-
--- Subtitle local subtitle = Instance.new("TextLabel", main) subtitle.Text = "Get Key (Linkvertise ONLY IN DISCORD)" subtitle.Size = UDim2.new(1, -40, 0, 25) subtitle.Position = UDim2.new(0, 20, 0, 50) subtitle.BackgroundTransparency = 1 subtitle.TextColor3 = Color3.fromRGB(180, 180, 255) subtitle.Font = Enum.Font.Gotham subtitle.TextSize = 15 subtitle.TextXAlignment = Enum.TextXAlignment.Left
-
--- Nhập key local input = Instance.new("TextBox", main) input.Size = UDim2.new(1, -40, 0, 40) input.Position = UDim2.new(0, 20, 0, 90) input.PlaceholderText = "Enter your key..." input.Text = "" input.Font = Enum.Font.Gotham input.TextSize = 16 input.TextColor3 = Color3.new(1, 1, 1) input.PlaceholderColor3 = Color3.fromRGB(180, 180, 180) input.BackgroundColor3 = Color3.fromRGB(30, 30, 45) Instance.new("UICorner", input).CornerRadius = UDim.new(0, 6)
-
--- Nút check key local checkBtn = Instance.new("TextButton", main) checkBtn.Size = UDim2.new(1, -40, 0, 35) checkBtn.Position = UDim2.new(0, 20, 0, 140) checkBtn.Text = "Check Key" checkBtn.Font = Enum.Font.GothamBold checkBtn.TextSize = 16 checkBtn.TextColor3 = Color3.new(1, 1, 1) checkBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 110) Instance.new("UICorner", checkBtn).CornerRadius = UDim.new(0, 6)
-
--- Xử lý nhập key checkBtn.MouseButton1Click:Connect(function() if input.Text == "123" then checkBtn.Text = "✅ Correct! Loading..."
-
--- Thông báo thành công
-	local notify = Instance.new("Frame", gui)
-	notify.Size = UDim2.new(0, 300, 0, 50)
-	notify.Position = UDim2.new(0.5, -150, 1, -60)
-	notify.BackgroundColor3 = Color3.fromRGB(30, 255, 120)
-	notify.BackgroundTransparency = 0.15
-	Instance.new("UICorner", notify).CornerRadius = UDim.new(0, 8)
-
-	local icon = Instance.new("ImageLabel", notify)
-	icon.Image = "rbxassetid://87017226532045"
-	icon.Size = UDim2.new(0, 32, 0, 32)
-	icon.Position = UDim2.new(0, 10, 0.5, -16)
-	icon.BackgroundTransparency = 1
-
-	local label = Instance.new("TextLabel", notify)
-	label.Text = "Executed Successfully!"
-	label.Size = UDim2.new(1, -50, 1, 0)
-	label.Position = UDim2.new(0, 50, 0, 0)
-	label.TextColor3 = Color3.new(1, 1, 1)
-	label.Font = Enum.Font.GothamBold
-	label.TextSize = 16
-	label.BackgroundTransparency = 1
-	label.TextXAlignment = Enum.TextXAlignment.Left
-
-	task.delay(3, function()
-		notify:Destroy()
-		gui:Destroy()
-		blur:Destroy()
-		-- Gọt script chính ở đây
-		-- loadstring(game:HttpGet("LINK_TO_YOUR_MAIN_SCRIPT"))()
-	end)
-else
-	checkBtn.Text = "❌ Wrong Key!"
-	wait(1.2)
-	checkBtn.Text = "Check Key"
-end
-
+toggleBtn.MouseButton1Click:Connect(function()
+	main.Visible = not main.Visible
 end)
 
+-- Tiêu đề GUI (Rainbow)
+local rainbowTitle = Instance.new("TextLabel", main)
+rainbowTitle.Size = UDim2.new(1, 0, 0, 25)
+rainbowTitle.Text = "DreamHub | By Sung a Lo"
+rainbowTitle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+rainbowTitle.TextColor3 = Color3.new(1, 1, 1)
+rainbowTitle.Font = Enum.Font.SourceSansBold
+rainbowTitle.TextScaled = true
+
+local hue = 0
+RunService.RenderStepped:Connect(function()
+	hue = (hue + 1) % 360
+	local color = Color3.fromHSV(hue / 360, 1, 1)
+	rainbowTitle.TextColor3 = color
+end)
+
+-- Hàm tạo Toggle
+function createToggle(name, posY, onToggle)
+	local btn = Instance.new("TextButton", main)
+	btn.Size = UDim2.new(0.9, 0, 0, 30)
+	btn.Position = UDim2.new(0.05, 0, 0, posY)
+	btn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+	btn.TextColor3 = Color3.new(1, 1, 1)
+	btn.Font = Enum.Font.SourceSansBold
+	btn.TextScaled = true
+
+	local state = false
+	local function update()
+		btn.Text = name .. (state and " ✅ ON" or " ❌ OFF")
+		btn.BackgroundColor3 = state and Color3.fromRGB(0, 200, 100) or Color3.fromRGB(255, 80, 80)
+	end
+
+	btn.MouseButton1Click:Connect(function()
+		state = not state
+		update()
+		onToggle(state)
+	end)
+
+	update()
+end
+
+-- Noclip
+local noclipConn
+createToggle("Noclip", 30, function(on)
+	if on then
+		noclipConn = RunService.Stepped:Connect(function()
+			if lp.Character then
+				for _, part in pairs(lp.Character:GetDescendants()) do
+					if part:IsA("BasePart") then
+						part.CanCollide = false
+					end
+				end
+			end
+		end)
+	elseif noclipConn then
+		noclipConn:Disconnect()
+	end
+end)
+
+-- Boost
+local boostConn
+createToggle("Boost", 65, function(on)
+	if on then
+		boostConn = RunService.RenderStepped:Connect(function()
+			local char = lp.Character
+			if char and char:FindFirstChild("HumanoidRootPart") then
+				local hum = char:FindFirstChild("Humanoid")
+				local hrp = char:FindFirstChild("HumanoidRootPart")
+				if hum.MoveDirection.Magnitude > 0 then
+					hrp.Velocity = hum.MoveDirection * 50 + Vector3.new(0, hrp.Velocity.Y, 0)
+				end
+			end
+		end)
+	elseif boostConn then
+		boostConn:Disconnect()
+	end
+end)
+
+-- Infinite Jump
+local infConn
+createToggle("Infinite Jump", 100, function(on)
+	if on then
+		infConn = UIS.JumpRequest:Connect(function()
+			local char = lp.Character
+			if char and char:FindFirstChild("HumanoidRootPart") then
+				char.HumanoidRootPart.Velocity = Vector3.new(0, 50, 0)
+			end
+		end)
+	elseif infConn then
+		infConn:Disconnect()
+	end
+end)
+
+-- ESP Rainbow Name
+local espLabels = {}
+local espLoop
+
+createToggle("ESP Rainbow", 135, function(on)
+	if on then
+		espLoop = RunService.RenderStepped:Connect(function()
+			for _, plr in pairs(Players:GetPlayers()) do
+				if plr ~= lp and plr.Character and plr.Character:FindFirstChild("Head") then
+					if not espLabels[plr] then
+						local bill = Instance.new("BillboardGui", plr.Character.Head)
+						bill.Size = UDim2.new(0, 100, 0, 25)
+						bill.StudsOffset = Vector3.new(0, 2.5, 0)
+						bill.AlwaysOnTop = true
+
+						local nameLabel = Instance.new("TextLabel", bill)
+						nameLabel.Size = UDim2.new(1, 0, 1, 0)
+						nameLabel.BackgroundTransparency = 1
+						nameLabel.Text = plr.Name
+						nameLabel.Font = Enum.Font.SourceSansBold
+						nameLabel.TextScaled = true
+						nameLabel.TextColor3 = Color3.new(1,1,1)
+
+						espLabels[plr] = nameLabel
+					end
+				end
+			end
+
+			for _, label in pairs(espLabels) do
+				local t = tick() % 5
+				label.TextColor3 = Color3.fromHSV(t/5, 1, 1)
+			end
+		end)
+	else
+		if espLoop then espLoop:Disconnect() end
+		for _, label in pairs(espLabels) do
+			label.Parent:Destroy()
+		end
+		espLabels = {}
+	end
+end)
