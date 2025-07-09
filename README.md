@@ -282,7 +282,7 @@ boostBtn.MouseButton1Click:Connect(function()
 				local hum = char.Humanoid
 				local hrp = char.HumanoidRootPart
 				if hum.MoveDirection.Magnitude > 0 then
-					hrp.Velocity = hum.MoveDirection * 70 + Vector3.new(0, hrp.Velocity.Y, 0)
+					hrp.Velocity = hum.MoveDirection * 65 + Vector3.new(0, hrp.Velocity.Y, 0)
 				end
 			end
 		end)
