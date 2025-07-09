@@ -1,4 +1,4 @@
--- Ngăn GUI trùng lặp
+-- Xóa GUI trùng
 pcall(function() game.CoreGui:FindFirstChild("NBGui"):Destroy() end)
 
 local Players = game:GetService("Players")
@@ -14,7 +14,7 @@ local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Name = "NBGui"
 gui.ResetOnSpawn = false
 
--- Nút đóng mở (di chuyển được)
+-- Nút toggle GUI
 local toggleFrame = Instance.new("Frame", gui)
 toggleFrame.Size = UDim2.new(0, 60, 0, 60)
 toggleFrame.Position = UDim2.new(0, 10, 0.5, -30)
@@ -27,7 +27,7 @@ toggleBtn.Size = UDim2.new(1, 0, 1, 0)
 toggleBtn.Image = "rbxassetid://87017226532045"
 toggleBtn.BackgroundTransparency = 1
 
--- GUI chính nhỏ
+-- GUI nhỏ
 local main = Instance.new("Frame", gui)
 main.Size = UDim2.new(0, 210, 0, 210)
 main.Position = UDim2.new(0, 80, 0.5, -105)
@@ -40,7 +40,7 @@ toggleBtn.MouseButton1Click:Connect(function()
 	main.Visible = not main.Visible
 end)
 
--- Tiêu đề GUI (Rainbow)
+-- Tiêu đề Rainbow
 local rainbowTitle = Instance.new("TextLabel", main)
 rainbowTitle.Size = UDim2.new(1, 0, 0, 25)
 rainbowTitle.Text = "DreamHub | By Sung a Lo"
@@ -62,7 +62,7 @@ function createToggle(name, posY, onToggle)
 	btn.Position = UDim2.new(0.05, 0, 0, posY)
 	btn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 	btn.TextColor3 = Color3.new(1, 1, 1)
-	btn.Font = Enum.Font.SourceSansBold
+	btn.Font = Enum.Font.Arcade
 	btn.TextScaled = true
 
 	local state = false
@@ -80,14 +80,14 @@ function createToggle(name, posY, onToggle)
 	update()
 end
 
--- Hàm tạo nút thường (không phải toggle)
+-- Hàm tạo Button thường
 function createButton(name, posY, callback)
 	local btn = Instance.new("TextButton", main)
 	btn.Size = UDim2.new(0.9, 0, 0, 30)
 	btn.Position = UDim2.new(0.05, 0, 0, posY)
 	btn.BackgroundColor3 = Color3.fromRGB(100, 100, 160)
 	btn.TextColor3 = Color3.new(1, 1, 1)
-	btn.Font = Enum.Font.SourceSansBold
+	btn.Font = Enum.Font.Arcade
 	btn.TextScaled = true
 	btn.Text = name
 	btn.MouseButton1Click:Connect(callback)
@@ -111,28 +111,9 @@ createToggle("Noclip", 30, function(on)
 	end
 end)
 
--- Boost
-local boostConn
-createToggle("Boost", 65, function(on)
-	if on then
-		boostConn = RunService.RenderStepped:Connect(function()
-			local char = lp.Character
-			if char and char:FindFirstChild("HumanoidRootPart") then
-				local hum = char:FindFirstChild("Humanoid")
-				local hrp = char:FindFirstChild("HumanoidRootPart")
-				if hum.MoveDirection.Magnitude > 0 then
-					hrp.Velocity = hum.MoveDirection * 50 + Vector3.new(0, hrp.Velocity.Y, 0)
-				end
-			end
-		end)
-	elseif boostConn then
-		boostConn:Disconnect()
-	end
-end)
-
 -- Infinite Jump
 local infConn
-createToggle("Infinite Jump", 100, function(on)
+createToggle("Infinite Jump", 65, function(on)
 	if on then
 		infConn = UIS.JumpRequest:Connect(function()
 			local char = lp.Character
@@ -149,7 +130,7 @@ end)
 local espLabels = {}
 local espLoop
 
-createToggle("ESP Rainbow", 135, function(on)
+createToggle("ESP Rainbow", 100, function(on)
 	if on then
 		espLoop = RunService.RenderStepped:Connect(function()
 			for _, plr in pairs(Players:GetPlayers()) do
@@ -187,7 +168,7 @@ createToggle("ESP Rainbow", 135, function(on)
 	end
 end)
 
--- Hop Server Button
+-- Hop Server
 function hopServer()
 	local servers = {}
 	local success, result = pcall(function()
@@ -208,6 +189,42 @@ function hopServer()
 	end
 end
 
-createButton("Hop Server", 170, function()
+createButton("Hop Server", 135, function()
 	hopServer()
+end)
+
+-- Nút Boost riêng nhỏ
+local boostBtn = Instance.new("TextButton", gui)
+boostBtn.Size = UDim2.new(0, 85, 0, 30)
+boostBtn.Position = UDim2.new(0, 10, 1, -40)
+boostBtn.BackgroundColor3 = Color3.fromRGB(90, 150, 255)
+boostBtn.Font = Enum.Font.Arcade
+boostBtn.TextSize = 18
+boostBtn.TextColor3 = Color3.new(1, 1, 1)
+boostBtn.Text = "BOOST"
+boostBtn.ZIndex = 10
+
+local boostConn
+local boostOn = false
+
+boostBtn.MouseButton1Click:Connect(function()
+	boostOn = not boostOn
+	if boostOn then
+		boostBtn.Text = "ON BOOST"
+		boostBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+		boostConn = RunService.RenderStepped:Connect(function()
+			local char = lp.Character
+			if char and char:FindFirstChild("HumanoidRootPart") then
+				local hum = char:FindFirstChild("Humanoid")
+				local hrp = char:FindFirstChild("HumanoidRootPart")
+				if hum.MoveDirection.Magnitude > 0 then
+					hrp.Velocity = hum.MoveDirection * 50 + Vector3.new(0, hrp.Velocity.Y, 0)
+				end
+			end
+		end)
+	else
+		boostBtn.Text = "BOOST"
+		boostBtn.BackgroundColor3 = Color3.fromRGB(90, 150, 255)
+		if boostConn then boostConn:Disconnect() end
+	end
 end)
