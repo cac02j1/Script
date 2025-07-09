@@ -1,4 +1,4 @@
--- Ngăn GUI trùng lặp
+-- Xoá GUI trùng
 pcall(function() game.CoreGui:FindFirstChild("NBGui"):Destroy() end)
 
 local Players = game:GetService("Players")
@@ -11,7 +11,7 @@ local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Name = "NBGui"
 gui.ResetOnSpawn = false
 
--- Nút đóng mở (di chuyển được)
+-- Nút đóng/mở GUI
 local toggleFrame = Instance.new("Frame", gui)
 toggleFrame.Size = UDim2.new(0, 60, 0, 60)
 toggleFrame.Position = UDim2.new(0, 10, 0.5, -30)
@@ -24,7 +24,7 @@ toggleBtn.Size = UDim2.new(1, 0, 1, 0)
 toggleBtn.Image = "rbxassetid://87017226532045"
 toggleBtn.BackgroundTransparency = 1
 
--- GUI chính nhỏ
+-- GUI chính
 local main = Instance.new("Frame", gui)
 main.Size = UDim2.new(0, 210, 0, 175)
 main.Position = UDim2.new(0, 80, 0.5, -87)
@@ -37,20 +37,18 @@ toggleBtn.MouseButton1Click:Connect(function()
 	main.Visible = not main.Visible
 end)
 
--- Tiêu đề GUI (Rainbow)
-local rainbowTitle = Instance.new("TextLabel", main)
-rainbowTitle.Size = UDim2.new(1, 0, 0, 25)
-rainbowTitle.Text = "DreamHub | By Sung a Lo"
-rainbowTitle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-rainbowTitle.TextColor3 = Color3.new(1, 1, 1)
-rainbowTitle.Font = Enum.Font.SourceSansBold
-rainbowTitle.TextScaled = true
+-- Tiêu đề GUI
+local title = Instance.new("TextLabel", main)
+title.Size = UDim2.new(1, 0, 0, 25)
+title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+title.Font = Enum.Font.Arcade
+title.TextScaled = true
+title.Text = "MeMayBeoHub | By Sung a Lo"
 
 local hue = 0
 RunService.RenderStepped:Connect(function()
 	hue = (hue + 1) % 360
-	local color = Color3.fromHSV(hue / 360, 1, 1)
-	rainbowTitle.TextColor3 = color
+	title.TextColor3 = Color3.fromHSV(hue / 360, 1, 1)
 end)
 
 -- Hàm tạo Toggle
@@ -60,7 +58,7 @@ function createToggle(name, posY, onToggle)
 	btn.Position = UDim2.new(0.05, 0, 0, posY)
 	btn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 	btn.TextColor3 = Color3.new(1, 1, 1)
-	btn.Font = Enum.Font.SourceSansBold
+	btn.Font = Enum.Font.Arcade
 	btn.TextScaled = true
 
 	local state = false
@@ -96,28 +94,9 @@ createToggle("Noclip", 30, function(on)
 	end
 end)
 
--- Boost
-local boostConn
-createToggle("Boost", 65, function(on)
-	if on then
-		boostConn = RunService.RenderStepped:Connect(function()
-			local char = lp.Character
-			if char and char:FindFirstChild("HumanoidRootPart") then
-				local hum = char:FindFirstChild("Humanoid")
-				local hrp = char:FindFirstChild("HumanoidRootPart")
-				if hum.MoveDirection.Magnitude > 0 then
-					hrp.Velocity = hum.MoveDirection * 50 + Vector3.new(0, hrp.Velocity.Y, 0)
-				end
-			end
-		end)
-	elseif boostConn then
-		boostConn:Disconnect()
-	end
-end)
-
 -- Infinite Jump
 local infConn
-createToggle("Infinite Jump", 100, function(on)
+createToggle("Infinite Jump", 65, function(on)
 	if on then
 		infConn = UIS.JumpRequest:Connect(function()
 			local char = lp.Character
@@ -130,11 +109,11 @@ createToggle("Infinite Jump", 100, function(on)
 	end
 end)
 
--- ESP Rainbow Name
+-- ESP Rainbow
 local espLabels = {}
 local espLoop
 
-createToggle("ESP Rainbow", 135, function(on)
+createToggle("ESP Rainbow", 100, function(on)
 	if on then
 		espLoop = RunService.RenderStepped:Connect(function()
 			for _, plr in pairs(Players:GetPlayers()) do
@@ -149,7 +128,7 @@ createToggle("ESP Rainbow", 135, function(on)
 						nameLabel.Size = UDim2.new(1, 0, 1, 0)
 						nameLabel.BackgroundTransparency = 1
 						nameLabel.Text = plr.Name
-						nameLabel.Font = Enum.Font.SourceSansBold
+						nameLabel.Font = Enum.Font.Arcade
 						nameLabel.TextScaled = true
 						nameLabel.TextColor3 = Color3.new(1,1,1)
 
@@ -169,5 +148,40 @@ createToggle("ESP Rainbow", 135, function(on)
 			label.Parent:Destroy()
 		end
 		espLabels = {}
+	end
+end)
+
+-- Nút Boost nhỏ (ngoài GUI)
+local boostBtn = Instance.new("TextButton", gui)
+boostBtn.Size = UDim2.new(0, 100, 0, 30)
+boostBtn.Position = UDim2.new(0.5, -50, 1, -100)
+boostBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+boostBtn.TextColor3 = Color3.new(1, 1, 1)
+boostBtn.Font = Enum.Font.Arcade
+boostBtn.TextScaled = true
+boostBtn.Text = "Boost OFF"
+
+local boosting = false
+local boostConn
+
+boostBtn.MouseButton1Click:Connect(function()
+	boosting = not boosting
+	if boosting then
+		boostBtn.Text = "Boost ON"
+		boostBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+		boostConn = RunService.RenderStepped:Connect(function()
+			local char = lp.Character
+			if char and char:FindFirstChild("HumanoidRootPart") then
+				local hum = char:FindFirstChild("Humanoid")
+				local hrp = char:FindFirstChild("HumanoidRootPart")
+				if hum.MoveDirection.Magnitude > 0 then
+					hrp.Velocity = hum.MoveDirection * 50 + Vector3.new(0, hrp.Velocity.Y, 0)
+				end
+			end
+		end)
+	else
+		boostBtn.Text = "Boost OFF"
+		boostBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+		if boostConn then boostConn:Disconnect() end
 	end
 end)
