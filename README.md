@@ -1,6 +1,7 @@
--- Ngăn GUI trùng lặp
-pcall(function() game.CoreGui:FindFirstChild("NBGui"):Destroy() end)
+-- Xóa GUI cũ nếu có
+pcall(function() game.CoreGui:FindFirstChild("DreamHub"):Destroy() end)
 
+-- Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
@@ -11,10 +12,11 @@ local PlaceId = game.PlaceId
 
 -- GUI
 local gui = Instance.new("ScreenGui", game.CoreGui)
-gui.Name = "NBGui"
+gui.Name = "DreamHub"
 gui.ResetOnSpawn = false
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Toggle GUI
+-- Nút toggle GUI
 local toggleFrame = Instance.new("Frame", gui)
 toggleFrame.Size = UDim2.new(0, 60, 0, 60)
 toggleFrame.Position = UDim2.new(0, 10, 0.5, -30)
@@ -27,10 +29,10 @@ toggleBtn.Size = UDim2.new(1, 0, 1, 0)
 toggleBtn.Image = "rbxassetid://87017226532045"
 toggleBtn.BackgroundTransparency = 1
 
--- Main GUI
+-- GUI chính
 local main = Instance.new("Frame", gui)
-main.Size = UDim2.new(0, 210, 0, 210)
-main.Position = UDim2.new(0, 80, 0.5, -105)
+main.Size = UDim2.new(0, 210, 0, 220)
+main.Position = UDim2.new(0, 80, 0.5, -110)
 main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 main.Active = true
 main.Draggable = true
@@ -40,22 +42,22 @@ toggleBtn.MouseButton1Click:Connect(function()
 	main.Visible = not main.Visible
 end)
 
--- Rainbow title
+-- Tiêu đề
 local title = Instance.new("TextLabel", main)
 title.Size = UDim2.new(1, 0, 0, 25)
 title.Text = "DreamHub | By Sung a Lo"
 title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 title.Font = Enum.Font.Arcade
 title.TextScaled = true
-title.TextColor3 = Color3.new(1,1,1)
+title.TextColor3 = Color3.new(1, 1, 1)
 
 local hue = 0
 RunService.RenderStepped:Connect(function()
 	hue = (hue + 1) % 360
-	title.TextColor3 = Color3.fromHSV(hue/360, 1, 1)
+	title.TextColor3 = Color3.fromHSV(hue / 360, 1, 1)
 end)
 
--- Toggle creator
+-- Tạo nút toggle
 function createToggle(name, posY, onToggle)
 	local btn = Instance.new("TextButton", main)
 	btn.Size = UDim2.new(0.9, 0, 0, 30)
@@ -155,7 +157,15 @@ createToggle("ESP Rainbow", 100, function(on)
 end)
 
 -- Hop Server
-function hopServer()
+local hopBtn = Instance.new("TextButton", main)
+hopBtn.Size = UDim2.new(0.9, 0, 0, 30)
+hopBtn.Position = UDim2.new(0.05, 0, 0, 135)
+hopBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 200)
+hopBtn.TextColor3 = Color3.new(1, 1, 1)
+hopBtn.Font = Enum.Font.Arcade
+hopBtn.TextScaled = true
+hopBtn.Text = "Hop Server"
+hopBtn.MouseButton1Click:Connect(function()
 	local servers = {}
 	local success, result = pcall(function()
 		return HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"))
@@ -168,33 +178,30 @@ function hopServer()
 		end
 	end
 	if #servers > 0 then
-		local randomServer = servers[math.random(1, #servers)]
-		TeleportService:TeleportToPlaceInstance(PlaceId, randomServer)
-	else
-		warn("❌ No available servers to hop.")
+		TeleportService:TeleportToPlaceInstance(PlaceId, servers[math.random(1, #servers)])
 	end
-end
+end)
 
-local hopBtn = Instance.new("TextButton", main)
-hopBtn.Size = UDim2.new(0.9, 0, 0, 30)
-hopBtn.Position = UDim2.new(0.05, 0, 0, 135)
-hopBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 200)
-hopBtn.TextColor3 = Color3.new(1, 1, 1)
-hopBtn.Font = Enum.Font.Arcade
-hopBtn.TextScaled = true
-hopBtn.Text = "Hop Server"
-hopBtn.MouseButton1Click:Connect(hopServer)
+-- BOOST KÉO ĐƯỢC ✅
+local boostFrame = Instance.new("Frame", gui)
+boostFrame.Size = UDim2.new(0, 120, 0, 45)
+boostFrame.Position = UDim2.new(0.5, -60, 0.5, -22)
+boostFrame.BackgroundTransparency = 1
+boostFrame.Active = true
+boostFrame.Draggable = true
+boostFrame.Selectable = true
+boostFrame.Name = "BoostFrame"
 
--- BOOST nút nhỏ riêng màu đen
-local boostBtn = Instance.new("TextButton", gui)
-boostBtn.Size = UDim2.new(0, 85, 0, 30)
-boostBtn.Position = UDim2.new(0, 10, 1, -40)
+local boostBtn = Instance.new("TextButton", boostFrame)
+boostBtn.Size = UDim2.new(1, 0, 1, 0)
 boostBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 boostBtn.Font = Enum.Font.Arcade
-boostBtn.TextSize = 18
+boostBtn.TextSize = 22
 boostBtn.TextColor3 = Color3.new(1, 1, 1)
 boostBtn.Text = "BOOST"
 boostBtn.ZIndex = 10
+boostBtn.AutoButtonColor = false
+boostBtn.Active = false -- Cho phép kéo Frame
 
 local boostConn
 local boostOn = false
